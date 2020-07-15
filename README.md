@@ -12,7 +12,7 @@ fun toXml(obj: Any?, name: String? = null): String
 fun <T> fromXml(xml: String, clazz: KClass<*>): T?
 ```
 
-![png](~/resources/screenshot.png)
+![png](https://github.com/acidsweet/kml/blob/master/resources/screenshot.png?raw=true)
 
 Kml has one main class,one tool file,four annotations
 
@@ -128,3 +128,5 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+```
