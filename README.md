@@ -6,11 +6,13 @@ Kml- a lightweight xml serializer/deserializer via kotlin
 Kml provide two simple method to  serializer/deserializer xml:
 
 ```kotlin
-/* object -> xml */ fun toXml(obj: Any?, name: String? = null): String
-/* xml -> object */fun <T> fromXml(xml: String, clazz: KClass<*>): T?
+/* object -> xml */
+fun toXml(obj: Any?, name: String? = null): String
+/* xml -> object */
+fun <T> fromXml(xml: String, clazz: KClass<*>): T?
 ```
 
-![截屏2020-07-15 下午4.26.29](https://tva1.sinaimg.cn/large/007S8ZIlly1ggrqjoptnej30pq0703yv.jpg)
+![png](~/resources/screenshot.png)
 
 Kml has one main class,one tool file,four annotations
 
@@ -110,8 +112,19 @@ More details in [Test.kt](https://github.com/acidsweet/kml/blob/master/core/src/
 * Huge file support
 
 ## License
+Kml is licensed under the [Apache 2.0 License](https://github.com/Shengaero/kotlin-json/tree/master/LICENSE)
 
+```
+Copyright 2018 Kaidan Gustave
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
