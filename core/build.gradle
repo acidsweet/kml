@@ -39,3 +39,26 @@ noArg {
 allOpen {
     annotation("io.jin.kml.annotations.NoArg")
 }
+
+// 指定编码
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// 打包源码
+task sourcesJar(type: Jar) {
+    from sourceSets.main.kotlin.srcDirs
+    classifier = 'sources'
+}
+
+
+// 制作文档(Javadoc)
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
