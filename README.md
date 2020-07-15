@@ -62,6 +62,22 @@ allOpen {
 }
 ```
 
+#### Install
+
+```groovy
+// Add it in your root build.gradle at the end of repositories:
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+//Add the dependency
+implementation 'com.github.acidsweet:kml:0.0.2'
+
+```
+
 #### Define your data class
 
 * @NoArg : help data class to create a no-arg constructer
