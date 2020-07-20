@@ -7,9 +7,11 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.*
+
+private const val LT = "<"
+private const val GT = ">"
+private const val LT_END = "</"
 
 fun getNameForKProperty(property: KProperty<*>): String {
     System.out.println("getNameForClass : $property , ${property.annotations}")
@@ -49,10 +51,6 @@ fun getNameForField(field: Field): String {
     }
     return field.name!!
 }
-private const val LT = "<"
-private const val GT = ">"
-private const val LT_END = "</"
-
 fun openTag(tagName: String, attributes: List<Pair<String, String>>? = null): String {
     val sb = StringBuilder()
     sb.append(LT).append(tagName)
@@ -77,47 +75,28 @@ fun getName(obj: Any): String {
     }
 }
 
-fun isNativeObject(obj: Any): Boolean {
-    System.out.println("--> isNativeObject: $obj")
-    if(isArray(obj)){
-        return false
-    }
-    var type: KType = when(obj) {
-        is KType -> obj
-        is KClass<*> -> obj.createType()
-        else -> obj.javaClass.kotlin.createType()
-    }
-    System.out.println("--> isNativeObject: type = $type ")
-    return when (type) {
-        Char::class.createType() -> true
-        Int::class.createType() -> true
-        Short::class.createType() -> true
-        Long::class.createType() -> true
-        Float::class.createType() -> true
-        Double::class.createType() -> true
-        Boolean::class.createType() -> true
-        else -> String::class.createType() == type
-    }
-}
 fun isArray(obj: Any?): Boolean {
     System.out.println("isArray obj = $obj")
     if(obj == null) {
         return false
     }
-    return when(obj) {
+    val res =  when(obj) {
         is KType -> {
-            kotlin.collections.List::class == obj.classifier
+            List::class == obj.classifier
         }
         is KClass<*> -> {
+            obj::createType
             obj.isSubclassOf(List::class)
         }
         else -> {
             obj is Array<*> || obj is List<*>
         }
     }
+    log("isArray","$obj isArray = $res")
+    return res
 }
 
-fun string2Primite(string: String?,type: KType): Any? {
+fun string2Primitive(string: String?,type: KType): Any? {
     return when (type) {
         Char::class.createType() -> string?.toCharArray()?.first()
         Int::class.createType() -> string?.toInt()
@@ -132,21 +111,37 @@ fun string2Primite(string: String?,type: KType): Any? {
 
 fun <T,R> KMutableProperty1<T,R>.setUnsafed(receiver: Any?, value: R) {
     log("setUnsafed","${receiver.toString()} : ${value.toString()} ${this.returnType.classifier}")
-//    return when {
-//        isArray(this) -> {
-//            set(receiver as T, value as List<Any>)
-//        }
-//        else -> set(receiver as T, value)
-//
-//    }
     return set(receiver as T, value)
 }
 fun <T,R> KMutableProperty1<T,R>.getUnsafed(receiver: Any?): R {
     log("getUnsafed",receiver.toString())
     return get(receiver as T)
 }
+
+/**
+ * 通过KType判断是不是原生类型
+ */
+fun isPrimitiveByKType(type:KType): Boolean {
+    return when {
+        Char::class.createType(nullable = true).isSupertypeOf(type) -> true
+        Int::class.createType(nullable = true).isSupertypeOf(type) -> true
+        Short::class.createType(nullable = true).isSupertypeOf(type) -> true
+        Long::class.createType(nullable = true).isSupertypeOf(type) -> true
+        Float::class.createType(nullable = true).isSupertypeOf(type) -> true
+        Double::class.createType(nullable = true).isSupertypeOf(type) -> true
+        Boolean::class.createType(nullable = true).isSupertypeOf(type) -> true
+        else -> String::class.createType(nullable = true).isSupertypeOf(type)
+    }
+}
+
+private var isDebug = false
+
+fun enableDebug(debug :Boolean = true) {
+    isDebug = debug
+}
+
 fun log(tag: String? = "Kml",msg: String) {
-    if(true) {
+    if(isDebug) {
         System.out.println("$tag : $msg")
     }
 }
